@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+.youtubeplayer{
+	width: 480px;
+	height: 360px;
+	display: block;	
+}
+
+	.youtubeplayer .youtubeplayer-wrapper{
+		width: 480px;
+		height: 360px;
+		display: block;
+	}

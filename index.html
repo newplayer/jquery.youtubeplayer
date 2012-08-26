@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>jQuery.YouTubePlayer Demo</title>
+
+<link href="jquery.youtubeplayer.css" media="screen" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="jquery.youtubeplayer.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		$('.youtube').youtubeplayer();
+		
+	});
+
+</script>
+
+</head>
+<body>
+
+	<div class='youtube' data-youtube='http://youtu.be/OoDHA8dy7JM'>
+	</div>
+	
+	<div class='youtube' data-youtube='http://vimeo.com/OoDHA8dy7JM'>
+	</div>
+	
+	<div class='youtube' data-youtube='http://youtu.be/nemjo123456'>
+	</div>
+
+</body>
+</html>
