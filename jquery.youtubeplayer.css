@@ -1,12 +1,9 @@
 @CHARSET "UTF-8";
-.youtubeplayer{
-	width: 480px;
-	height: 360px;
-	display: block;	
+.youtubeplayer-wrapper{
+	width: 600px;
+	height: 400px;
+	display: block;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
-
-	.youtubeplayer .youtubeplayer-wrapper{
-		width: 480px;
-		height: 360px;
-		display: block;
-	}

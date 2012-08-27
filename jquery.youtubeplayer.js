@@ -100,12 +100,12 @@
 				}
 				
 				$( '.youtubeplayer-' + youtubeid ).html(''+
-						'<div class="youtubeplayer-wrapper" style="background-image: url(\'' + data.thumbnail.hqDefault + '\')">' +
-							'<div class="youtube-play">' +
-							'</div>' +
-							'<div class="youtube-progressbar">' +
-							'</div>' +
-						'</div>');
+					'<div class="youtubeplayer-wrapper" style="background-image: url(\'' + data.thumbnail.hqDefault + '\')">' +
+						'<div id="youtube-play-'+ youtubeid +'" class="youtube-play">' +
+						'</div>' +
+						'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
+						'</div>' +
+					'</div>');
 				
 			});
 			
