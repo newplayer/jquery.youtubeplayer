@@ -61,6 +61,7 @@
 			}
 			
 			$(this).addClass( 'youtubeplayer youtubeplayer-' + youtubeid );
+			$(this).attr( 'id','youtubeplayer-' + youtubeid );
 
 			// Lekérdezzük a videó adatokat a YouTube.com-tól
 			$.get( youtubeAPI,{ 'q':youtubeid },function(response){
@@ -99,12 +100,18 @@
 					
 				}
 				
-				$( '.youtubeplayer-' + youtubeid ).html(''+
+				$( '#youtubeplayer-' + youtubeid ).html(''+
 					'<div class="youtubeplayer-wrapper" style="background-image: url(\'' + data.thumbnail.hqDefault + '\')">' +
 						'<div id="youtube-play-'+ youtubeid +'" class="youtube-play">' +
 						'</div>' +
 						'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
 						'</div>' +
+						'<object width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;bgcolor=ffffff&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;controls=0" style="visibility: visible; z-index: 1; display: none;">'+
+							'<param name="allowScriptAccess" value="always">'+
+							'<param name="allowFullScreen" value="true">'+
+							'<param name="bgcolor" value="#ffffff">'+
+							'<param name="wmode" value="opaque">'+
+						'</object>' +
 					'</div>');
 				
 			});
