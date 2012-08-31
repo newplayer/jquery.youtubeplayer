@@ -4,7 +4,7 @@
 	
 		// beállítások eszközölése
 		var settings = $.extend( {
-			'width': 400,
+			'width': 580,
 			'height': 300,
 			'aspectratio': true
 		}, options );
@@ -79,8 +79,8 @@
 				
 				//TODO: mi történnyen ha nem engedélyezett a beágyazás?
 				// data.items[0].accessControl.embed != 'allowed'
-				
-				// mostmár megvan minden adat és tuti biztos, hogy használható is a kapott értékek
+				// Ez itt mi?
+				// mostmár megvan minden adat és tuti biztos, hogy használható is a ka1pott értékek
 				data = data.items[0];
 				
 				youtubeid = data.id;
