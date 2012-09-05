@@ -44,6 +44,49 @@
 		 */
 		var player = null;
 		
+		// beállítjuk a gombokat
+		$( '.youtube-button' ).live("click",function(){
+			
+			var youtubeid = $(this).attr('data-youtubeid');
+			
+			console.log( 'Player button click: ' + youtubeid );
+			
+			// lekérdezzük a flash lejátszót
+			player = document.getElementById('youtubeplayer-player-'+youtubeid);
+			
+			// a lejátszó állapota
+			// ez igazából fordítva van a css miatt
+			if( $( this ).hasClass('youtube-play') ){
+
+				$( this ).removeClass('youtube-play').addClass('youtube-pause');
+				
+				player.playVideo();
+				
+				/*
+				if(settings.progressBar){
+					interval = window.setInterval(function(){
+						elements.elapsed.width(
+							((elements.player.getCurrentTime()/data.duration)*100)+'%'
+						);
+					},1000);
+				}
+				*/
+				
+			} else {
+
+				$( this ).removeClass('youtube-pause').addClass('youtube-play');
+
+				player.pauseVideo();
+				
+				/*
+				if(settings.progressBar){
+					window.clearInterval(interval);
+				}
+				*/
+			}
+			
+		}); // $( '#youtube-play-' + youtubeid ).click
+		
 		// végigszaladunk az elemeken
 		return this.each(function() {
 			
@@ -105,101 +148,25 @@
 					
 				}
 				
-				$( '#youtubeplayer-' + youtubeid ).html(''+
-					'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
-						'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button">' +
-						'</div>' +
-						'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
-						'</div>' +
-						'<div id="youtube-image-'+ youtubeid +'" class="youtube-image"style="background-image: url('+ data.thumbnail.hqDefault +'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
-						'</div>'+
-						'<object id="youtubeplayer-player-'+ youtubeid +'" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres" style="visibility: visible; z-index: 1;">'+
-							'<param name="allowScriptAccess" value="always">'+
-							'<param name="allowFullScreen" value="true">'+
-							'<param name="bgcolor" value="#ffffff">'+
-							'<param name="wmode" value="opaque">'+
-						'</object>' +
-					'</div>');
-				
 				// kimentjük a lejátszót egy változóba
-				player = $( '#youtubeplayer-player-' + youtubeid ).flash().get();
+				//player = $( '#youtubeplayer-player-' + youtubeid ).flash().get();
 				
-
-				var initialized = false;
-				
-				// Creating a global event listening function for the video
-				// (required by YouTube's player API):
+				console.log('Youtubeid: ' + youtubeid );
 				
 				window[ 'eventListener_' + youtubeid ] = function(status){
 					
-					if(status==-1)	// video is loaded
-					{
-						if(!initialized)
-						{
-							// Listen for a click on the control button:
+					console.log( youtubeid + ' status: ' + status );
+					
+					if( status== -1 ){ // video töltődik
 							
-							console.log( youtubeid+' halgató' );
-							
-							$( '#youtube-play-' + youtubeid ).click(function(){
-								
-								console.log('click play');
-								
-								player = document.getElementById('youtubeplayer-player-'+youtubeid);
-								
-								//if(!elements.container.hasClass('playing')){
-								if( $( this ).hasClass('youtube-play') ){
-									
-									// If the video is not currently playing, start it:
-
-									$( this ).removeClass('youtube-play').addClass('youtube-pause');
-									//elements.container.addClass('playing');
-									player.playVideo();
-									
-									
-									/*
-									if(settings.progressBar){
-										interval = window.setInterval(function(){
-											elements.elapsed.width(
-												((elements.player.getCurrentTime()/data.duration)*100)+'%'
-											);
-										},1000);
-									}
-									*/
-									
-								} else {
-									
-									// If the video is currently playing, pause it:
-									
-									//elements.control.removeClass('pause').addClass('play');
-									$( this ).removeClass('youtube-pause').addClass('youtube-play');
-									//elements.container.removeClass('playing');
-									player.pauseVideo();
-									//$( '#youtube-image-' + youtubeid ).show();
-									
-									/*
-									if(settings.progressBar){
-										window.clearInterval(interval);
-									}
-									*/
-								}
-							});
-							
-							initialized = true;
-						}
-						else{
-							// This will happen if the user has clicked on the
-							// YouTube logo and has been redirected to youtube.com
-
-							if(elements.container.hasClass('playing'))
-							{
-								elements.control.click();
-							}
-						}
+						
 					}
 					
-					if(status==0){ // video has ended
+					if( status == 0 ){ // video has ended
+						
 						//elements.control.removeClass('pause').addClass('replay');
 						//elements.container.removeClass('playing');
+						
 					}
 					
 					// ha a videó lejátszása elindul, akkor tüntessük el a kezdőképet
@@ -210,6 +177,21 @@
 					}
 				}
 
+				$( '#youtubeplayer-' + youtubeid ).html(''+
+						'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
+							'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button" data-youtubeid="'+ youtubeid +'">' +
+							'</div>' +
+							'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
+							'</div>' +
+							'<div id="youtube-image-'+ youtubeid +'" class="youtube-image"style="background-image: url('+ data.thumbnail.hqDefault +'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
+							'</div>'+
+							'<object id="youtubeplayer-player-'+ youtubeid +'" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres" style="visibility: visible; z-index: 1;">'+
+								'<param name="allowScriptAccess" value="always">'+
+								'<param name="allowFullScreen" value="true">'+
+								'<param name="bgcolor" value="#ffffff">'+
+								'<param name="wmode" value="opaque">'+
+							'</object>' +
+						'</div>');
 				
 			});
 			
@@ -222,7 +204,7 @@
 
 function onYouTubePlayerReady( playerID ){
 		
-	console.log(playerID+' valami');
+	console.log('onYouTubePlayerReady: ' + playerID);
 	
 	document.getElementById('youtubeplayer-player-'+playerID).addEventListener('onStateChange','eventListener_'+playerID);
 
