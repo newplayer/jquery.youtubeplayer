@@ -106,12 +106,14 @@
 				}
 				
 				$( '#youtubeplayer-' + youtubeid ).html(''+
-					'<div class="youtubeplayer-wrapper" style="background-image: url(\'' + data.thumbnail.hqDefault + '\'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
-						'<div id="youtube-play-'+ youtubeid +'" class="youtube-play">' +
+					'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
+						'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button">' +
 						'</div>' +
 						'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
 						'</div>' +
-						'<object id="youtubeplayer-player-'+ youtubeid +'" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0" style="visibility: visible; z-index: 1;">'+
+						'<div id="youtube-image-'+ youtubeid +'" class="youtube-image"style="background-image: url('+ data.thumbnail.hqDefault +'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
+						'</div>'+
+						'<object id="youtubeplayer-player-'+ youtubeid +'" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres" style="visibility: visible; z-index: 1;">'+
 							'<param name="allowScriptAccess" value="always">'+
 							'<param name="allowFullScreen" value="true">'+
 							'<param name="bgcolor" value="#ffffff">'+
@@ -136,22 +138,23 @@
 						{
 							// Listen for a click on the control button:
 							
-							//console.log( youtubeid );
+							console.log( youtubeid+' halgató' );
 							
 							$( '#youtube-play-' + youtubeid ).click(function(){
 								
-								//console.log('click play');
+								console.log('click play');
 								
 								player = document.getElementById('youtubeplayer-player-'+youtubeid);
 								
 								//if(!elements.container.hasClass('playing')){
-								if( $( this ).hasClass('play') ){
+								if( $( this ).hasClass('youtube-play') ){
 									
 									// If the video is not currently playing, start it:
 
-									$( this ).removeClass('play').addClass('pause');
+									$( this ).removeClass('youtube-play').addClass('youtube-pause');
 									//elements.container.addClass('playing');
-									player.pauseVideo();
+									player.playVideo();
+									
 									
 									/*
 									if(settings.progressBar){
@@ -168,9 +171,10 @@
 									// If the video is currently playing, pause it:
 									
 									//elements.control.removeClass('pause').addClass('play');
-									$( this ).removeClass('pause').addClass('play');
+									$( this ).removeClass('youtube-pause').addClass('youtube-play');
 									//elements.container.removeClass('playing');
-									player.playVideo();
+									player.pauseVideo();
+									//$( '#youtube-image-' + youtubeid ).show();
 									
 									/*
 									if(settings.progressBar){
@@ -197,6 +201,13 @@
 						//elements.control.removeClass('pause').addClass('replay');
 						//elements.container.removeClass('playing');
 					}
+					
+					// ha a videó lejátszása elindul, akkor tüntessük el a kezdőképet
+					if( status == 1 ){
+						
+						$( '#youtube-image-' + youtubeid ).hide();
+						
+					}
 				}
 
 				
@@ -211,7 +222,7 @@
 
 function onYouTubePlayerReady( playerID ){
 		
-	console.log(playerID);
+	console.log(playerID+' valami');
 	
 	document.getElementById('youtubeplayer-player-'+playerID).addEventListener('onStateChange','eventListener_'+playerID);
 

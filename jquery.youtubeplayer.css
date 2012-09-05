@@ -3,14 +3,21 @@
 	width: 600px;
 	height: 400px;
 	display: block;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
 	position: relative;
 }
 
-	.youtubeplayer-wrapper .youtube-play{
-		background-image: url(image/play.png);
+	.youtubeplayer-wrapper .youtube-image{
+		display: block;
+		position: absolute;
+		z-index: 5000;
+		left: 0px;
+		top: 0px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	.youtubeplayer-wrapper .youtube-button{
 		width: 60px;
 		height: 60px;
 		display: block;
@@ -18,4 +25,13 @@
 		position: absolute;
 		left: 20px;
 		top: 20px;
+		cursor: pointer;
+	}
+
+	.youtubeplayer-wrapper .youtube-play{
+		background-image: url(image/play.png);
+	}
+	
+	.youtubeplayer-wrapper:HOVER .youtube-pause{
+		background-image: url(image/pause.png);
 	}
