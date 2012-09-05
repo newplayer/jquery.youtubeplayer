@@ -6,4 +6,16 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+	position: relative;
 }
+
+	.youtubeplayer-wrapper .youtube-play{
+		background-image: url(image/play.png);
+		width: 60px;
+		height: 60px;
+		display: block;
+		z-index: 9001;
+		position: absolute;
+		left: 20px;
+		top: 20px;
+	}
