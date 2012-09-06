@@ -62,30 +62,29 @@
 				
 				player.playVideo();
 				
-				/*
-				if(settings.progressBar){
-					interval = window.setInterval(function(){
-						elements.elapsed.width(
-							((elements.player.getCurrentTime()/data.duration)*100)+'%'
-						);
-					},1000);
-				}
-				*/
+				window.setInterval(function(){
+					
+					console.log( 'progressbar: ' + youtubeid + ' time: ' + player.getCurrentTime() );
+					
+					$('#youtube-progressbar-status-'+ youtubeid ).width(
+						((document.getElementById('youtubeplayer-player-'+youtubeid).getCurrentTime()/$('#youtubeplayer-' + youtubeid).attr('data-duration'))*100)+'%'	
+					);
+				},1000);
+				
 				
 			} else {
 
 				$( this ).removeClass('youtube-pause').addClass('youtube-play');
 
 				player.pauseVideo();
+					
+				//window.clearInterval(interval);
+
 				
-				/*
-				if(settings.progressBar){
-					window.clearInterval(interval);
-				}
-				*/
 			}
 			
 		}); // $( '#youtube-play-' + youtubeid ).click
+
 		
 		// végigszaladunk az elemeken
 		return this.each(function() {
@@ -95,7 +94,7 @@
 			// Kihámozzuk az url-ből a video id-t
 			domain = $(this).attr( 'data-youtube' );
 			
-			youtubeid = domain.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=|\/sandalsResorts#\w\/\w\/.*\/))([^\/&]{10,12})/)
+			youtubeid = domain.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=|\/sandalsResorts#\w\/\w\/.*\/))([^\/&]{10,12})/);
 			
 			// ha kiderül, hogy ez nem egy szabványos youtube link, akkor megyünk a következőre
 			if( youtubeid == null ){
@@ -148,44 +147,50 @@
 					
 				}
 				
-				// kimentjük a lejátszót egy változóba
-				//player = $( '#youtubeplayer-player-' + youtubeid ).flash().get();
+				// több lejátszó esetén ne kavarodjanak össze a változó nevek
+				var str = "";
 				
-				console.log('Youtubeid: ' + youtubeid );
+				str += 'function eventListener_' + youtubeid +'(status){';
+					
 				
-				window[ 'eventListener_' + youtubeid ] = function(status){
+					str += 'console.log( "'+ youtubeid + ' status: " + status );';
 					
-					console.log( youtubeid + ' status: ' + status );
+					str += 'if( status == 0 ){';
 					
-					if( status== -1 ){ // video töltődik
-							
+						str += '$( "#youtube-play-'+ youtubeid +'" ).removeClass("youtube-pause").addClass("youtube-play"); ';
+						str += '$( "#youtube-image-'+ youtubeid +'" ).show(); ';
+						str += '$("#youtube-progressbar-status-'+ youtubeid + '" ).width("100%");';
 						
-					}
-					
-					if( status == 0 ){ // video has ended
-						
-						//elements.control.removeClass('pause').addClass('replay');
-						//elements.container.removeClass('playing');
-						
-					}
-					
+					str += '}';
+				
 					// ha a videó lejátszása elindul, akkor tüntessük el a kezdőképet
-					if( status == 1 ){
+					str += 'if( status == 1 ){';
 						
-						$( '#youtube-image-' + youtubeid ).hide();
+						str += '$( "#youtube-image-'+ youtubeid +'" ).hide();';
 						
-					}
-				}
+					str += '}';
+				
+				
+				str += '}';
+				
+				$('head').append('<script type="text/javascript">'+str+'</script>');
+				
+				console.log(str);
+				
+				// beállítjuk a video hosszát
+				$( '#youtubeplayer-' + youtubeid ).attr( 'data-duration', data.duration );
 
 				$( '#youtubeplayer-' + youtubeid ).html(''+
 						'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
 							'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button" data-youtubeid="'+ youtubeid +'">' +
 							'</div>' +
 							'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
+								'<div id="youtube-progressbar-status-'+ youtubeid +'" class="youtube-progressbar-status">' +
+								'</div>' +
 							'</div>' +
 							'<div id="youtube-image-'+ youtubeid +'" class="youtube-image"style="background-image: url('+ data.thumbnail.hqDefault +'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
 							'</div>'+
-							'<object id="youtubeplayer-player-'+ youtubeid +'" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" id="ytplayer-'+ youtubeid +'" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;rel=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres" style="visibility: visible; z-index: 1;">'+
+							'<object data-youtubeid="'+ youtubeid +'" id="youtubeplayer-player-'+ youtubeid +'" class="youtubeplayer-player" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres&amp;showsearch=0" style="visibility: visible; z-index: 1;">'+
 								'<param name="allowScriptAccess" value="always">'+
 								'<param name="allowFullScreen" value="true">'+
 								'<param name="bgcolor" value="#ffffff">'+
@@ -204,8 +209,9 @@
 
 function onYouTubePlayerReady( playerID ){
 		
-	console.log('onYouTubePlayerReady: ' + playerID);
 	
-	document.getElementById('youtubeplayer-player-'+playerID).addEventListener('onStateChange','eventListener_'+playerID);
+	console.log( 'onYoutubePlayerReady: ' + playerID );
+	
+	document.getElementById( 'youtubeplayer-player-' + playerID ).addEventListener( 'onStateChange', 'eventListener_' + playerID, true);
 
 }

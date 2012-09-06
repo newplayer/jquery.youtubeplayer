@@ -35,3 +35,19 @@
 	.youtubeplayer-wrapper:HOVER .youtube-pause{
 		background-image: url(image/pause.png);
 	}
+	
+	.youtubeplayer-wrapper:HOVER .youtube-progressbar{
+		width: 300px;
+		background-color: #fff;
+		display: block;
+		z-index: 9001;
+		position: absolute;
+		left: 0px;
+		top: 300px;
+		height: 10px;
+	}
+	
+		.youtubeplayer-wrapper:HOVER .youtube-progressbar .youtube-progressbar-status{
+			background-color: red;
+			height: 10px;
+		}
