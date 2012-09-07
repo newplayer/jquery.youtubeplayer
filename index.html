@@ -16,7 +16,10 @@
 
 	$(document).ready(function(){
 		
-		$('.youtube').youtubeplayer();
+		$('.youtube').youtubeplayer({
+			'progressbarMinusWidth': 160,
+			'progressbarMinusTop': 25
+		});
 		
 	});
 
@@ -28,11 +31,17 @@
 	<div class='youtube' data-youtube='https://www.youtube.com/watch?v=Y0ManZq_smw&feature=g-vrec'>
 	</div>
 	
+	<br /><br /><br />
+	
 	<div class='youtube' data-youtube='http://www.youtube.com/watch?v=Z_J04GRYfBQ&feature=g-vrec'>
 	</div>
 	
+	<br /><br /><br />
+	
 	<div class='youtube' data-youtube='http://youtu.be/nemjo123456'>
 	</div>
+	
+	<br /><br /><br />
 	
 	<div class='youtube' data-youtube='http://www.youtube.com/watch?v=tPEE9ZwTmy0'>
 	</div>

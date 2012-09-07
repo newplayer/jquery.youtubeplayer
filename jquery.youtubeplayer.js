@@ -6,7 +6,9 @@
 		var settings = $.extend( {
 			'width': 580,
 			'height': 300,
-			'aspectratio': true
+			'aspectratio': true,
+			'progressbarMinusWidth': 110,
+			'progressbarMinusTop': 25
 		}, options );
 		
 		/**
@@ -49,7 +51,7 @@
 			
 			var youtubeid = $(this).attr('data-youtubeid');
 			
-			console.log( 'Player button click: ' + youtubeid );
+			//console.log( 'Player button click: ' + youtubeid );
 			
 			// lekérdezzük a flash lejátszót
 			player = document.getElementById('youtubeplayer-player-'+youtubeid);
@@ -64,12 +66,25 @@
 				
 				window.setInterval(function(){
 					
-					console.log( 'progressbar: ' + youtubeid + ' time: ' + player.getCurrentTime() );
+					if( $("#youtube-play-" + youtubeid ).hasClass('youtube-pause') ){
+						
+						//console.log( 'progressbar: ' + youtubeid + ' time: ' + player.getCurrentTime() );
+						time = document.getElementById('youtubeplayer-player-'+youtubeid).getCurrentTime();
+						
+						strtime = YoutubePlayerConvertMillisecondToTime( time );
+						
+						//console.log( time );
+						//console.log( strtime );
+						
+						$('#youtube-progressbar-status-'+ youtubeid ).width(
+							(( time / $('#youtubeplayer-' + youtubeid).attr('data-duration') )*100)+'%'	
+						);
+				
+						
+					}
+						
 					
-					$('#youtube-progressbar-status-'+ youtubeid ).width(
-						((document.getElementById('youtubeplayer-player-'+youtubeid).getCurrentTime()/$('#youtubeplayer-' + youtubeid).attr('data-duration'))*100)+'%'	
-					);
-				},1000);
+				},500);
 				
 				
 			} else {
@@ -153,13 +168,13 @@
 				str += 'function eventListener_' + youtubeid +'(status){';
 					
 				
-					str += 'console.log( "'+ youtubeid + ' status: " + status );';
+					//str += 'console.log( "'+ youtubeid + ' status: " + status );';
 					
 					str += 'if( status == 0 ){';
 					
 						str += '$( "#youtube-play-'+ youtubeid +'" ).removeClass("youtube-pause").addClass("youtube-play"); ';
 						str += '$( "#youtube-image-'+ youtubeid +'" ).show(); ';
-						str += '$("#youtube-progressbar-status-'+ youtubeid + '" ).width("100%");';
+						str += '$( "#youtube-progressbar-status-'+ youtubeid + '" ).width("100%");';
 						
 					str += '}';
 				
@@ -175,7 +190,7 @@
 				
 				$('head').append('<script type="text/javascript">'+str+'</script>');
 				
-				console.log(str);
+				//console.log(str);
 				
 				// beállítjuk a video hosszát
 				$( '#youtubeplayer-' + youtubeid ).attr( 'data-duration', data.duration );
@@ -184,7 +199,7 @@
 						'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
 							'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button" data-youtubeid="'+ youtubeid +'">' +
 							'</div>' +
-							'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar">' +
+							'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar" style="width: '+ (settings.width - settings.progressbarMinusWidth) +'px; top: '+ (settings.height-settings.progressbarMinusTop) +'px">' +
 								'<div id="youtube-progressbar-status-'+ youtubeid +'" class="youtube-progressbar-status">' +
 								'</div>' +
 							'</div>' +
@@ -210,8 +225,33 @@
 function onYouTubePlayerReady( playerID ){
 		
 	
-	console.log( 'onYoutubePlayerReady: ' + playerID );
+	//console.log( 'onYoutubePlayerReady: ' + playerID );
 	
 	document.getElementById( 'youtubeplayer-player-' + playerID ).addEventListener( 'onStateChange', 'eventListener_' + playerID, true);
 
+}
+
+function YoutubePlayerConvertMillisecondToTime( sec ){
+	
+	x = sec;
+
+	minutes = x % 60;
+	x /= 60;
+	hours = x % 24;
+	
+	str = Math.floor(minutes);
+	
+	if( minutes < 10 ){
+		
+		str = '0' + str;
+		
+	}
+	
+	if( Math.floor(hours) >= 0 ){
+		
+		str = Math.floor(hours) + ':' + str;
+		
+	}
+	
+	return str;
 }

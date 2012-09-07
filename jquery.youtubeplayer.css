@@ -37,17 +37,16 @@
 	}
 	
 	.youtubeplayer-wrapper:HOVER .youtube-progressbar{
-		width: 300px;
 		background-color: #fff;
 		display: block;
 		z-index: 9001;
 		position: absolute;
-		left: 0px;
-		top: 300px;
+		left: 80px;
 		height: 10px;
+		opacity: 0.8;
 	}
 	
 		.youtubeplayer-wrapper:HOVER .youtube-progressbar .youtube-progressbar-status{
-			background-color: red;
+			background-color: #de672e;
 			height: 10px;
 		}
