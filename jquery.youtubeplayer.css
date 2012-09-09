@@ -26,27 +26,65 @@
 		left: 20px;
 		top: 20px;
 		cursor: pointer;
+		opacity: 0.0;
+	}
+	
+	.youtubeplayer-wrapper:HOVER .youtube-button{
+		opacity: 0.8;
 	}
 
 	.youtubeplayer-wrapper .youtube-play{
 		background-image: url(image/play.png);
 	}
 	
-	.youtubeplayer-wrapper:HOVER .youtube-pause{
+	.youtubeplayer-wrapper .youtube-pause{
 		background-image: url(image/pause.png);
 	}
 	
-	.youtubeplayer-wrapper:HOVER .youtube-progressbar{
+	.youtubeplayer-wrapper .youtube-progressbar{
 		background-color: #fff;
 		display: block;
-		z-index: 9001;
+		z-index: 4001;
 		position: absolute;
-		left: 80px;
+		left: 90px;
 		height: 10px;
+		opacity: 0.0;
+	}
+	
+	.youtubeplayer-wrapper:HOVER .youtube-progressbar{
 		opacity: 0.8;
 	}
 	
-		.youtubeplayer-wrapper:HOVER .youtube-progressbar .youtube-progressbar-status{
+		.youtubeplayer-wrapper .youtube-progressbar .youtube-progressbar-status{
 			background-color: #de672e;
 			height: 10px;
+			width: 0px;
+		}
+		
+	.youtubeplayer-wrapper .youtube-progressbar-bubble{
+		display: none;
+		position: absolute;
+		z-index: 4001;
+		opacity: 0.8;
+		background-image: url(image/timer_footer.png);
+		background-repeat: no-repeat;
+		background-position: center bottom;
+		padding-bottom: 5px;
+	}
+	
+	.youtubeplayer-wrapper .youtube-progressbar-bubble{
+		display: block;
+		opacity: 0.0;
+	}
+	
+	.youtubeplayer-wrapper:HOVER .youtube-progressbar-bubble{
+		opacity: 0.8;
+	}
+	
+		.youtubeplayer-wrapper .youtube-progressbar-bubble .youtube-progressbar-bubble-time{
+			line-height: 16px;
+			font-size: 16px;
+			background-color: #de672e;
+			color: #fff;
+			padding: 5px;
 		}

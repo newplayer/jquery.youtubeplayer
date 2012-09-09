@@ -7,8 +7,9 @@
 			'width': 580,
 			'height': 300,
 			'aspectratio': true,
-			'progressbarMinusWidth': 110,
-			'progressbarMinusTop': 25
+			'progressbarMinusWidth': 210,
+			'progressbarMinusTop': 25,
+			'quality': 'hd720'
 		}, options );
 		
 		/**
@@ -63,22 +64,25 @@
 				$( this ).removeClass('youtube-play').addClass('youtube-pause');
 				
 				player.playVideo();
+				player.setPlaybackQuality(settings.quality);
 				
 				window.setInterval(function(){
 					
 					if( $("#youtube-play-" + youtubeid ).hasClass('youtube-pause') ){
 						
-						//console.log( 'progressbar: ' + youtubeid + ' time: ' + player.getCurrentTime() );
 						time = document.getElementById('youtubeplayer-player-'+youtubeid).getCurrentTime();
 						
 						strtime = YoutubePlayerConvertMillisecondToTime( time );
 						
-						//console.log( time );
-						//console.log( strtime );
+						$('#youtube-progressbar-bubble-time-'+ youtubeid ).html( strtime );
 						
 						$('#youtube-progressbar-status-'+ youtubeid ).width(
 							(( time / $('#youtubeplayer-' + youtubeid).attr('data-duration') )*100)+'%'	
 						);
+						
+						var p = $( '#youtube-progressbar-status-'+ youtubeid ).offset();
+						
+						$('#youtube-progressbar-bubble-'+ youtubeid).css('left', p.left + $('#youtube-progressbar-status-'+ youtubeid ).width() - ( $('#youtube-progressbar-bubble-'+ youtubeid).width() / 2 ) - 8 );
 				
 						
 					}
@@ -99,6 +103,26 @@
 			}
 			
 		}); // $( '#youtube-play-' + youtubeid ).click
+		
+		
+		// videóba csavaráshoz
+		$('.youtube-progressbar').live('click',function(e){
+			
+				var youtubeid = $(this).attr('data-youtubeid');
+		        
+		        var videoLength = $('#youtubeplayer-' + youtubeid).attr('data-duration');
+		        
+		        var barLength = $('#youtube-progressbar-'+ youtubeid ).width();
+		        
+		        var clickPosition = e.pageX - $(this).offset().left;	
+		        
+		        var barPercent = clickPosition / barLength * 100;
+		        
+		        var time = videoLength / 100 * barPercent;
+		        
+		        document.getElementById('youtubeplayer-player-'+youtubeid).seekTo(time); 
+		        
+		});
 
 		
 		// végigszaladunk az elemeken
@@ -144,6 +168,8 @@
 				// Ez itt mi?
 				// mostmár megvan minden adat és tuti biztos, hogy használható is a ka1pott értékek
 				data = data.items[0];
+				
+				//console.log( data );
 				
 				youtubeid = data.id;
 				
@@ -199,19 +225,44 @@
 						'<div class="youtubeplayer-wrapper" style="width: '+ settings.width +'px; height: '+ settings.height +'px">' +
 							'<div id="youtube-play-'+ youtubeid +'" class="youtube-play youtube-button" data-youtubeid="'+ youtubeid +'">' +
 							'</div>' +
-							'<div id="youtube-progressbar-'+ youtubeid +'" class="youtube-progressbar" style="width: '+ (settings.width - settings.progressbarMinusWidth) +'px; top: '+ (settings.height-settings.progressbarMinusTop) +'px">' +
+							'<div id="youtube-progressbar-bubble-'+ youtubeid +'" class="youtube-progressbar-bubble">' +
+								'<div id="youtube-progressbar-bubble-time-'+ youtubeid +'"  class="youtube-progressbar-bubble-time">' +
+									'00:00' +
+								'</div>' +
+							'</div>' +
+							'<div id="youtube-progressbar-'+ youtubeid +'" data-youtubeid="'+ youtubeid +'" class="youtube-progressbar" style="width: '+ (settings.width - settings.progressbarMinusWidth) +'px; top: '+ (settings.height-settings.progressbarMinusTop) +'px">' +
 								'<div id="youtube-progressbar-status-'+ youtubeid +'" class="youtube-progressbar-status">' +
 								'</div>' +
 							'</div>' +
 							'<div id="youtube-image-'+ youtubeid +'" class="youtube-image"style="background-image: url('+ data.thumbnail.hqDefault +'); width: '+ settings.width +'px; height: '+ settings.height +'px">' +
 							'</div>'+
-							'<object data-youtubeid="'+ youtubeid +'" id="youtubeplayer-player-'+ youtubeid +'" class="youtubeplayer-player" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" data="http://www.youtube.com/v/'+ youtubeid +'?autoplay=0&amp;enablejsapi=1&amp;gestures=0&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres&amp;showsearch=0" style="visibility: visible; z-index: 1;">'+
+							'<object data-youtubeid="'+ youtubeid +'" id="youtubeplayer-player-'+ youtubeid +'" class="youtubeplayer-player" width="'+ settings.width +'" height="'+ settings.height +'" type="application/x-shockwave-flash" data="http://www.youtube.com/apiplayer?video_id='+ youtubeid +'&amp;autoplay=0&amp;enablejsapi=1&amp;disablekb=1&amp;showinfo=0&amp;version=3&amp;playerapiid='+ youtubeid +'&amp;controls=0&amp;suggestedQuality=highres&amp;showsearch=0&amp;modestbranding=0" style="visibility: visible; z-index: 1;">'+
 								'<param name="allowScriptAccess" value="always">'+
 								'<param name="allowFullScreen" value="true">'+
 								'<param name="bgcolor" value="#ffffff">'+
 								'<param name="wmode" value="opaque">'+
 							'</object>' +
 						'</div>');
+				
+				/*
+				 * 
+				 *  +
+						'<div class="">' +
+							'<a href="http://youtu.be/'+ youtubeid +'">' +
+								'http://youtu.be/'+ youtubeid +
+							'</a>' +
+						'</div>'
+				 * 
+				 */
+				
+				// méretek beállítása
+				
+				//progressbar bubble
+				$('#youtube-progressbar-bubble-'+ youtubeid).css('top', settings.height-settings.progressbarMinusTop - $('#youtube-progressbar-bubble-'+ youtubeid).outerHeight() - 2 );
+				
+				var p = $( '#youtube-progressbar-status-'+ youtubeid ).offset();
+				
+				$('#youtube-progressbar-bubble-'+ youtubeid).css('left', p.left - ( $('#youtube-progressbar-bubble-'+ youtubeid).width() / 2 ) - 8 );
 				
 			});
 			
@@ -231,25 +282,47 @@ function onYouTubePlayerReady( playerID ){
 
 }
 
-function YoutubePlayerConvertMillisecondToTime( sec ){
+function YoutubePlayerConvertMillisecondToTime( secs ){
 	
-	x = sec;
-
-	minutes = x % 60;
-	x /= 60;
-	hours = x % 24;
-	
-	str = Math.floor(minutes);
-	
-	if( minutes < 10 ){
+    var hours = Math.floor(secs / (60 * 60));
+    
+    var divisor_for_minutes = secs % (60 * 60);
+    var minutes = Math.floor(divisor_for_minutes / 60);
+ 
+    var divisor_for_seconds = divisor_for_minutes % 60;
+    var seconds = Math.ceil(divisor_for_seconds);
+    
+	if( seconds < 10 ){
 		
-		str = '0' + str;
+		str = '0' + seconds;
+		
+	}else{
+		
+		str = seconds;
 		
 	}
 	
-	if( Math.floor(hours) >= 0 ){
+	if( minutes>0 ){
 		
-		str = Math.floor(hours) + ':' + str;
+		if( minutes< 10 ){
+			
+			str = '0' + minutes + ':' + str;
+			
+		}else{
+			
+			str = minutes + ':' + str;
+			
+		}
+		
+	}else{
+		
+		str = '00:' + str;
+		
+	}
+	
+	if( hours > 0 ){
+		
+		str = hours + ':' + str;
 		
 	}
 	
