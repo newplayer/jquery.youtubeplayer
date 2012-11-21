@@ -154,7 +154,9 @@
 				
 				active_sender = sender;
 				
-				data = response.data;
+				var data = $.parseJSON( response );
+				
+				data = data.data;
 				
 				if( !data.totalItems ){
 					
